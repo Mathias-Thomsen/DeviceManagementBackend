@@ -1,16 +1,17 @@
-package com.example.devicemanagement.services;
+package com.example.devicemanagement.services.idService;
 
 import com.example.devicemanagement.enums.DeviceType;
+import com.example.devicemanagement.repositories.DeviceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DeviceIdService {
 
-    /*
+
     @Autowired
     private DeviceRepository deviceRepository;
-
-
 
     public String generateNextDeviceId(DeviceType deviceType) {
         String deviceTypeAbbreviation = deviceType.getAbbreviation();
@@ -32,7 +33,7 @@ public class DeviceIdService {
         return deviceTypeAbbreviation + formattedSequence;
     }
 
-     */
+
 
 
 }

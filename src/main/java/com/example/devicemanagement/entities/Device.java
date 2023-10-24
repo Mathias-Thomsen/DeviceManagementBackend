@@ -11,12 +11,19 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_imei", columnNames = "IMEINumber"),
+                @UniqueConstraint(name = "unique_serial_number", columnNames = "SerialNumber")
+        }
+)
 public class Device {
 
     @Id
@@ -48,6 +55,9 @@ public class Device {
 
     @UpdateTimestamp //Hibernate automatic update this timestamp if there has been implemented a change in the database.
     private LocalDateTime lastUpdated;
+
+
+
 
 
 

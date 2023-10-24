@@ -1,6 +1,7 @@
 package com.example.devicemanagement.entities;
 
 
+import com.example.devicemanagement.enums.EmployeeType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "employee_id")
+    private String id;
 
     private String fullname;
 
@@ -28,11 +29,7 @@ public class Employee {
     @Column(nullable = false)
     private String lastname;
 
-    public String getFullname() {
-        if (middleName != null && !middleName.isEmpty()) {
-            return firstname + " " + middleName + " " + lastname;
-        } else {
-            return firstname + " " + lastname;
-        }
-    }
+    @Enumerated(EnumType.STRING)
+    private EmployeeType employeeType;
+
 }
