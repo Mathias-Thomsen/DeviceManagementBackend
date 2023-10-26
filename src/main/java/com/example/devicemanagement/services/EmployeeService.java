@@ -18,7 +18,7 @@ public class EmployeeService {
 
     public void saveEmployee(Employee employee) {
         employee.setFullname(generateFullname(employee));
-        String nextId = employeeIdService.generateNextEmployeeId(employee.getEmployeeType());
+        String nextId = employeeIdService.generateNextEmployeeId(employee.getEmployeeType().getAbbreviation());
         employee.setId(nextId);
         employeeRepository.save(employee);
     }

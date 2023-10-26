@@ -2,11 +2,14 @@ package com.example.devicemanagement.config;
 
 import com.example.devicemanagement.entities.Device;
 import com.example.devicemanagement.entities.Employee;
+import com.example.devicemanagement.entities.SimCard;
 import com.example.devicemanagement.enums.DeviceStatus;
 import com.example.devicemanagement.enums.DeviceType;
 import com.example.devicemanagement.enums.EmployeeType;
+import com.example.devicemanagement.enums.SimCardType;
 import com.example.devicemanagement.services.DeviceService;
 import com.example.devicemanagement.services.EmployeeService;
+import com.example.devicemanagement.services.SimCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,9 @@ public class InitData implements CommandLineRunner {
 
     @Autowired
     EmployeeService employeeService;
+
+    @Autowired
+    SimCardService simCardService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -52,7 +58,6 @@ public class InitData implements CommandLineRunner {
         deviceService.saveDevice(device3);
 
         Employee employee1 = new Employee();
-        employee1.setFullname("John Smith");
         employee1.setFirstname("John");
         employee1.setMiddleName("David");
         employee1.setLastname("Smith");
@@ -60,18 +65,52 @@ public class InitData implements CommandLineRunner {
         employeeService.saveEmployee(employee1);
 
         Employee employee2 = new Employee();
-        employee2.setFullname("Alice Johnson");
         employee2.setFirstname("Alice");
         employee2.setLastname("Johnson");
         employee2.setEmployeeType(EmployeeType.TIMELONNET);
         employeeService.saveEmployee(employee2);
 
         Employee employee3 = new Employee();
-        employee3.setFullname("Bob Anderson");
         employee3.setFirstname("Bob");
         employee3.setLastname("Anderson");
         employee3.setEmployeeType(EmployeeType.FUNKTIONAER_LONNET);
         employeeService.saveEmployee(employee3);
+
+        Employee employee4 = new Employee();
+        employee4.setFirstname("Mathias");
+        employee4.setLastname("Thomsen");
+        employee4.setEmployeeType(EmployeeType.FUNKTIONAER_LONNET);
+        employeeService.saveEmployee(employee4);
+
+
+        SimCard simCard1 = new SimCard();
+        simCard1.setPhoneNumber("12345678");
+        simCard1.setIMSINumber(9876543210L);
+        simCard1.setICCIDNumber(1234567890L);
+        simCard1.setPinCode(1234);
+        simCard1.setPukCode(5678);
+        simCard1.setSimCardType(SimCardType.PHONE_CARD);
+        simCardService.saveSimCard(simCard1);
+
+        SimCard simCard2 = new SimCard();
+        simCard2.setPhoneNumber("87654321");
+        simCard2.setIMSINumber(1111111111L);
+        simCard2.setICCIDNumber(2222222222L);
+        simCard2.setPinCode(4321);
+        simCard2.setPukCode(8765);
+        simCard2.setSimCardType(SimCardType.DATA_SHARING_CARD);
+        simCardService.saveSimCard(simCard2);
+
+        SimCard simCard3 = new SimCard();
+        simCard3.setPhoneNumber("55555555");
+        simCard3.setIMSINumber(3333333333L);
+        simCard3.setICCIDNumber(4444444444L);
+        simCard3.setPinCode(9999);
+        simCard3.setPukCode(8888);
+        simCard3.setSimCardType(SimCardType.PHONE_CARD);
+        simCardService.saveSimCard(simCard3);
+
+
 
 
 

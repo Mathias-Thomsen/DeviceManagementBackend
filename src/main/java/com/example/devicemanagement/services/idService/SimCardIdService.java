@@ -2,11 +2,13 @@ package com.example.devicemanagement.services.idService;
 
 
 import com.example.devicemanagement.enums.SimCardType;
+import com.example.devicemanagement.repositories.SimCardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SimCardIdService {
 
-
-    /*
     @Autowired
     private SimCardRepository simCardRepository;
 
@@ -16,7 +18,7 @@ public class SimCardIdService {
         String simCardTypeAbbreviation = simCardType.getAbbreviation();
 
         // Find det højeste eksisterende ID for den pågældende enhedstype
-        String maxSimCardId = simCardRepository.findMaxDeviceIdForType(simCardTypeAbbreviation);
+        String maxSimCardId = simCardRepository.findMaxSimCardIdForType(simCardTypeAbbreviation);
 
         int abbreviationLength = simCardTypeAbbreviation.length();
 
@@ -32,7 +34,7 @@ public class SimCardIdService {
         return simCardTypeAbbreviation + formattedSequence;
     }
 
-     */
+
 
 
 

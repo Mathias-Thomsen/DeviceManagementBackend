@@ -10,25 +10,27 @@ import org.springframework.stereotype.Service;
 public class EmployeeIdService {
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
-    public String generateNextEmployeeId(EmployeeType employeeType) {
-        String employeeTypeAbbreviation = employeeType.getAbbreviation();
 
-        // Find det højeste eksisterende ID for den pågældende enhedstype
-        String maxEmployeeId = employeeRepository.findMaxEmployeeIdForType(employeeTypeAbbreviation);
+    public String generateNextEmployeeId(String employeeTypeAbbreviation) {
+        String maxEmployeeId = employeeRepository.findMaxEmployeeId();
 
-        int abbreviationLength = employeeTypeAbbreviation.length();
+        // Tjek om maxEmployeeId er null, og sæt det til en tom streng, hvis det er tilfældet
+        maxEmployeeId = (maxEmployeeId != null) ? maxEmployeeId : "";
 
-        // Hent den numeriske sekvens fra eksisterende ID, hvis det findes
+        // Pars numerisk sekvens og fortsæt generering af næste ID
         int nextSequence = 1;
-        if (maxEmployeeId != null && maxEmployeeId.length() > abbreviationLength) {
-            String sequencePart = maxEmployeeId.substring(abbreviationLength);
-            nextSequence = Integer.parseInt(sequencePart) + 1;
+        if (!maxEmployeeId.isEmpty()) {
+            int maxSequence = Integer.parseInt(maxEmployeeId.substring(employeeTypeAbbreviation.length()));
+            nextSequence = maxSequence + 1;
         }
 
-        // Formater sekvensen med førende nuller og sammensæt ID
-        String formattedSequence = String.format("%0" + (4 - abbreviationLength) + "d", nextSequence);
+        String formattedSequence = String.format("%04d", nextSequence);
+
         return employeeTypeAbbreviation + formattedSequence;
     }
+
+
+
 }

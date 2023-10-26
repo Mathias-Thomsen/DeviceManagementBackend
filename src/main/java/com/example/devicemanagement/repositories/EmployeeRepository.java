@@ -7,7 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-    @Query("SELECT MAX(e.id) FROM Employee e WHERE e.id LIKE :employeeTypeAbbreviation%")
-    String findMaxEmployeeIdForType(@Param("employeeTypeAbbreviation") String employeeTypeAbbreviation);
 
+
+    @Query("SELECT MAX(e.id) FROM Employee e")
+    String findMaxEmployeeId();
 }
