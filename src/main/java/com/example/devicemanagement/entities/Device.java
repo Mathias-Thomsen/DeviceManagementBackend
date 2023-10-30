@@ -20,7 +20,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(
         uniqueConstraints = {
-                @UniqueConstraint(name = "unique_imei", columnNames = "IMEINumber"),
+                @UniqueConstraint(
+                        name = "unique_imei",
+                        columnNames = "IMEINumber"),
                 @UniqueConstraint(name = "unique_serial_number", columnNames = "SerialNumber")
         }
 )
