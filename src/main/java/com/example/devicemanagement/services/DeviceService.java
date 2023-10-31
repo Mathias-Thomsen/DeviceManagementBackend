@@ -20,11 +20,11 @@ public class DeviceService {
     private DeviceIdService deviceIdService;
 
     // Method for save device with the device id logik we made from deviceIdService
-    public Device saveDevice(Device device) {
+    public Optional<Device> saveDevice(Device device) {
         String nextId = deviceIdService.generateNextDeviceId(device.getDeviceType()); //generate and get the next id
         device.setId(nextId);
         deviceRepository.save(device);
-        return device;
+        return Optional.of(device);
     }
 
 

@@ -1,16 +1,16 @@
 package com.example.devicemanagement.controllers;
 import com.example.devicemanagement.entities.Device;
+import com.example.devicemanagement.exceptions.CustomException;
 import com.example.devicemanagement.services.DeviceService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 
 @RestController
-@RequestMapping("/devices")
+@RequestMapping("/device")
 public class DeviceRestController {
 
     private final DeviceService deviceService;
@@ -31,16 +31,16 @@ public class DeviceRestController {
     public ResponseEntity<Device> getDeviceById(@PathVariable String id) {
         return deviceService.getById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new CustomException("Device not found with id: " + id));
     }
 
-    // Opret en ny enhed
     @PostMapping
     public ResponseEntity<Device> createDevice(@RequestBody Device device) {
-        return Optional.ofNullable(deviceService.saveDevice(device))
-                .map(createdDevice -> ResponseEntity.status(HttpStatus.CREATED).body(createdDevice))
-                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        return deviceService.saveDevice(device)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new CustomException("Problem with post device"));
     }
+
 
 
     // Opdater en eksisterende enhed
@@ -48,10 +48,10 @@ public class DeviceRestController {
     public ResponseEntity<Device> updateDevice(@PathVariable String id, @RequestBody Device updatedDevice) {
         return deviceService.getById(id)
                 .map(device -> ResponseEntity.ok(deviceService.updateDevice(updatedDevice)))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new CustomException("Device not found with ID: " + id));
     }
 
-    // Slet en enhed efter ID
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDevice(@PathVariable String id) {
         return deviceService.getById(id)
@@ -59,6 +59,7 @@ public class DeviceRestController {
                     deviceService.delete(device);
                     return ResponseEntity.noContent().<Void>build();
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new CustomException("Device not found with ID: " + id));
     }
+
 }
