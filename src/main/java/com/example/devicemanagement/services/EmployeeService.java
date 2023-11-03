@@ -7,6 +7,10 @@ import com.example.devicemanagement.services.idService.EmployeeIdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.channels.FileChannel;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EmployeeService {
 
@@ -17,11 +21,12 @@ public class EmployeeService {
     private EmployeeIdService employeeIdService;
 
     // Save employee with the id logik we made in employeeIdService.
-    public void saveEmployee(Employee employee) {
+    public Optional<Employee> saveEmployee(Employee employee) {
         employee.setFullname(generateFullname(employee)); //Set fullname from the firstname, middlename(if present) and lastname from user input.
         String nextId = employeeIdService.generateNextEmployeeId(employee.getEmployeeType().getAbbreviation());
         employee.setId(nextId);
         employeeRepository.save(employee);
+        return Optional.of(employee);
     }
 
     // Collect fullname
@@ -35,6 +40,23 @@ public class EmployeeService {
         } else {
             return firstname + " " + lastname;
         }
+    }
+
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
+    public Optional<Employee> getById(String id) {
+        return employeeRepository.findById(id);
+
+    }
+
+    public Employee updateEmployee(Employee updatedEmployee) {
+        return employeeRepository.save(updatedEmployee);
+    }
+
+    public void deleteEmployee(Employee employee) {
+        employeeRepository.delete(employee);
     }
 }
 
