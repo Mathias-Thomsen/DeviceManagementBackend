@@ -30,7 +30,7 @@ public class EmployeeService {
     }
 
     // Collect fullname
-    private String generateFullname(Employee employee) {
+    public String generateFullname(Employee employee) {
         String firstname = employee.getFirstname();
         String middleName = employee.getMiddleName();
         String lastname = employee.getLastname();

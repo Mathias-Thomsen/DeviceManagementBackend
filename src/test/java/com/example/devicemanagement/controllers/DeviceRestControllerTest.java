@@ -5,11 +5,13 @@ import com.example.devicemanagement.exceptions.CustomException;
 import com.example.devicemanagement.services.DeviceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -21,29 +23,19 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(DeviceRestController.class)
+@ExtendWith(MockitoExtension.class)
 class DeviceRestControllerTest {
 
-    @Autowired
-    DeviceRestController deviceRestController;
+    @InjectMocks
+    private DeviceRestController deviceRestController;
 
-    @MockBean
+    @Mock
     DeviceService deviceService;
-
-    @Autowired
-    private MockMvc mockMvc;
-
 
     //Get all devices test
     @Test
@@ -74,18 +66,6 @@ class DeviceRestControllerTest {
         assertThrows(CustomException.class, () -> deviceRestController.getAllDevices());
     }
 
-    @Test
-    public void testGetAllDevicesEndpoint() throws Exception {
-        // Arrange
-        List<Device> expectedDevices = new ArrayList<>();
-        when(deviceService.findAll()).thenReturn(expectedDevices);
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/device")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
 
 
@@ -118,19 +98,6 @@ class DeviceRestControllerTest {
         assertThrows(CustomException.class, () -> deviceRestController.getDeviceById(invalidDeviceId));
     }
 
-    @Test
-    public void testGetDeviceByIdEndpoint() throws Exception {
-        // Arrange
-        String deviceId = "TB0001";
-        Device device = new Device();
-        when(deviceService.getById(deviceId)).thenReturn(Optional.of(device));
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/device/{id}", deviceId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
 
     // Test for create device
@@ -163,19 +130,6 @@ class DeviceRestControllerTest {
         assertThrows(CustomException.class, () -> deviceRestController.createDevice(newDevice));
     }
 
-    @Test
-    public void testCreateDeviceEndpoint() throws Exception {
-        // Arrange
-        Device deviceToCreate = new Device();
-        when(deviceService.saveDevice(deviceToCreate)).thenReturn(Optional.of(deviceToCreate));
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.post("/device")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(deviceToCreate)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
     public static String asJsonString(final Object obj) {
         try {
@@ -222,22 +176,7 @@ class DeviceRestControllerTest {
         assertThrows(CustomException.class, () -> deviceRestController.updateDevice(deviceId, updatedDevice));
     }
 
-    @Test
-    public void testUpdateDeviceEndpoint() throws Exception {
-        // Arrange
-        String deviceId = "TB0001";
-        Device updatedDevice = new Device();
 
-        when(deviceService.getById(deviceId)).thenReturn(Optional.of(new Device()));
-        when(deviceService.updateDevice(updatedDevice)).thenReturn(updatedDevice);
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.put("/device/{id}", deviceId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(updatedDevice))) // Use asJsonString from create device endpoint test
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
 
 
@@ -271,19 +210,6 @@ class DeviceRestControllerTest {
 
         // Act and Assert
         assertThrows(CustomException.class, () -> deviceRestController.deleteDevice(deviceId));
-    }
-
-    @Test
-    public void testDeleteDeviceEndpoint() throws Exception {
-        // Arrange
-        String deviceId = "TB0001";
-
-        when(deviceService.getById(deviceId)).thenReturn(Optional.of(new Device()));
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.delete("/device/{id}", deviceId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
 

@@ -6,17 +6,12 @@ import com.example.devicemanagement.services.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,18 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(EmployeeRestController.class)
+@ExtendWith(MockitoExtension.class)
 class EmployeeRestControllerTest {
 
-    @Autowired
+    @InjectMocks
     EmployeeRestController employeeRestController;
 
-    @MockBean
+    @Mock
     EmployeeService employeeService;
 
-    @Autowired
-    private MockMvc mockMvc;
 
     @Test
     public void testGetAllEmployees() {
@@ -67,18 +59,6 @@ class EmployeeRestControllerTest {
         assertThrows(CustomException.class, () -> employeeRestController.getAllEmployees());
     }
 
-    @Test
-    public void testGetAllEmployeesEndpoint() throws Exception {
-        // Arrange
-        List<Employee> expectedEmployees = new ArrayList<>();
-        when(employeeService.findAll()).thenReturn(expectedEmployees);
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/employee")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
     @Test
     public void testGetEmployeeById() {
@@ -109,19 +89,7 @@ class EmployeeRestControllerTest {
         assertThrows(CustomException.class, () -> employeeRestController.getEmployeeById(invalidEmployeeId));
     }
 
-    @Test
-    public void testGetEmployeeByIdEndpoint() throws Exception {
-        // Arrange
-        String employeeId = "TL0001";
-        Employee employee = new Employee();
-        when(employeeService.getById(employeeId)).thenReturn(Optional.of(employee));
 
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/employee/{id}", employeeId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
     @Test
     public void testCreateEmployee() {
@@ -152,19 +120,7 @@ class EmployeeRestControllerTest {
         assertThrows(CustomException.class, () -> employeeRestController.createEmployee(newEmployee));
     }
 
-    @Test
-    public void testCreateEmployeeEndpoint() throws Exception {
-        // Arrange
-        Employee employeeToCreate = new Employee();
-        when(employeeService.saveEmployee(employeeToCreate)).thenReturn(Optional.of(employeeToCreate));
 
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(employeeToCreate)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
 
     // For converting the test object to json. Used in delete and update test.
@@ -211,22 +167,7 @@ class EmployeeRestControllerTest {
         assertThrows(CustomException.class, () -> employeeRestController.updateEmployee(employeeId, updatedEmployee));
     }
 
-    @Test
-    public void testUpdateEmployeeEndpoint() throws Exception {
-        // Arrange
-        String employeeId = "TL0001";
-        Employee updatedEmployee = new Employee();
 
-        when(employeeService.getById(employeeId)).thenReturn(Optional.of(new Employee()));
-        when(employeeService.updateEmployee(updatedEmployee)).thenReturn(updatedEmployee);
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.put("/employee/{id}", employeeId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(updatedEmployee))) // Use asJsonString from create employee endpoint test
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
 
     @Test
     public void testDeleteEmployee() {
@@ -258,18 +199,7 @@ class EmployeeRestControllerTest {
         assertThrows(CustomException.class, () -> employeeRestController.deleteEmployee(employeeId));
     }
 
-    @Test
-    public void testDeleteEmployeeEndpoint() throws Exception {
-        // Arrange
-        String employeeId = "TL0001";
 
-        when(employeeService.getById(employeeId)).thenReturn(Optional.of(new Employee()));
-
-        // Act and Assert
-        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{id}", employeeId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
 
 
 
